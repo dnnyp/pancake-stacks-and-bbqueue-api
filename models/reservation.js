@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
     static async all(){
       return await this.findAll();
     }
+
+    static async add(rsvp){
+      return await this.create({ name: rsvp.name, slot: new Date(rsvp.slot) });
+    }
   }
 
   return Reservation;
