@@ -3,9 +3,12 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 const reservationsRouter = require('./routes/reservations');
+const cors = require('cors');
 
 // serve the homepage from here
 app.use(express.static('public'));
+
+app.use(cors({ origin: 'http://localhost:3001' }));
 
 // add `bodyParser` middleware which will parse JSON requests into
 // JS objects before they reach the route files.
