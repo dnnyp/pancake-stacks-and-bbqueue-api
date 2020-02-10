@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 
     static async add(rsvp){
       const date = new Date(rsvp.slot);
+
       return await this.findOrCreate({ where: { slot: date }, defaults: { name: rsvp.name, slot: date } });
     }
   }

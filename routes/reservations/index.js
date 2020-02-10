@@ -7,7 +7,14 @@ router.get('/', async (req,res) => {
 });
 
 router.post('/', async (req,res) => {
-  res.json(await Reservation.add(req.body.rsvp));
+  const rsvp = req.body.rsvp;
+  const slot = new Date(rsvp.slot);
+
+  if(slot.getUTCHours() < 3 || slot.getUTCHours() >= 18) {
+    res.json(await Reservation.add(rsvp));
+  } else {
+    res.sendStatus(418);
+  }
 });
 
 module.exports = router;
