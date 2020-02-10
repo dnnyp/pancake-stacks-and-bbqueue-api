@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async add(rsvp){
-      return await this.create({ name: rsvp.name, slot: new Date(rsvp.slot) });
+      const date = new Date(rsvp.slot);
+      return await this.findOrCreate({ where: { slot: date }, defaults: { name: rsvp.name, slot: date } });
     }
   }
 
