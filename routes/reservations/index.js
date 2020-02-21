@@ -34,10 +34,10 @@ router.post('/', async (req,res) => {
     if(available > 0) {
       res.json(await Reservation.add(rsvp));
     } else {
-      res.sendStatus(418);
+      res.status(418).send('No available tables');
     }
   } else {
-    res.sendStatus(418);
+    res.status(418).send('Requested slot is not within open hours');
   }
 });
 
