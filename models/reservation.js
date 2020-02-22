@@ -3,6 +3,8 @@
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
+const moment = require('moment');
+
 module.exports = (sequelize, DataTypes) => {
   const SequelizeReservation = sequelize.define('Reservation', {
     name: DataTypes.STRING,
@@ -10,21 +12,36 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   class Reservation extends SequelizeReservation {
+    // return upcoming reservations
     static async all(){
-      const date = new Date();
       return await this.findAll({
         where: {
           slot: {
-            [Op.gte]: date
+            [Op.gte]: moment().subtract(30, 'm')
           }
         }
       });
     }
 
-    static async add(rsvp){
-      const date = new Date(rsvp.slot);
+    // return count of reservations for a specific slot
+    static async count(slot){
+      const count = await this.findAll({
+        attributes: [[sequelize.fn('COUNT', sequelize.col('slot')), 'slots']],
+        where: {
+          slot: {
+            [Op.eq]: moment(slot)
+          }
+        }
+      });
 
-      return await this.findOrCreate({ where: { slot: date }, defaults: { name: rsvp.name, slot: date } });
+      return count[0].dataValues.slots;
+    }
+
+    // add a new reservation
+    static async add(rsvp){
+      const date = moment(rsvp.slot);
+
+      return await this.create({ name: rsvp.name, slot: date });
     }
   }
 
